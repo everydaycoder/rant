@@ -1,0 +1,31 @@
+# 
+# Copyright 2019 The Rant Authors.
+# 
+# Licensed under the GNU GPL v3 (the "License"). You may not use this file
+# unless in compliance with the License. You may view the License in the
+# LICENSE file in the root directory.
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# 
+# The Authors of this Library have chosen not to change any constraints
+# existing in this file, so everything will be abided by.
+# 
+
+package(
+    default_visibility = ["//visibility:public"],
+    features = ["parse_headers"],
+)
+
+cc_library(
+    name = "string",
+    srcs = [
+        "string.cc",
+    ],
+    hdrs = [
+        "string.h",
+    ],
+)
