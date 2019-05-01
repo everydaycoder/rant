@@ -6,7 +6,10 @@ namespace rant {
 class String {
 public:
   String();
+  String(const char* s);
   ~String();
+
+  char* c_str() const;
 private:
   char* s_;
   int length_;
