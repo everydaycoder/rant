@@ -1,6 +1,7 @@
 #include "rant/string/string.h"
 
 #include <string.h>
+#include <iostream>
 
 namespace rant {
 
@@ -18,12 +19,12 @@ String::String() {
 // @param const char* s The value to set the string to.
 String::String(const char* s) {
   // Create new char* with sizeof(s)+1 (Null) bytes allocated to it.
-  s_ = new char[sizeof(s)+1];
-  s_ = strncpy(s_, s, sizeof(s) + 1);
+  s_ = new char[strlen(s)+1];
+  s_ = strncpy(s_, s, strlen(s)+1);
   // Set last position to null to complete string.
-  s_[sizeof(s)] = '\0';
+  s_[strlen(s)] = '\0';
   
-  length_ = sizeof(s);
+  length_ = strlen(s_);
 }
 
 // ~String() <dest>
@@ -33,14 +34,101 @@ String::~String() {
   delete s_;
 }
 
-// char* c_str() const
+// const char* c_str() const
 // 
 // Returns the underlying c string (char*) that contains the string data.
 // @return char* The underlying c string
 // 
 // @const
-char* String::c_str() const {
+const char* String::c_str() const {
   return s_;
+}
+
+// operator char*() const
+//
+// Returns the underlying c string without the need to call c_str().
+// @return char* The underlying c string
+// 
+// @const
+// @operator
+String::operator char*() const {
+  return s_;
+}
+
+// String& concat(const String&)
+// 
+// Concatenates the given string object with the current one and returns
+// the result. This value is also saved in the calling object's c string.
+// @return String& This string object
+String& String::concat(const String& other) {
+  char* tmp = new char[length_];
+  tmp = strncpy(tmp, s_, length_);
+  delete s_;
+
+  s_ = new char[length_ + other.length_ + 1];
+  s_ = strncpy(s_, tmp, length_);
+
+  strncpy(s_+other.length_, other.s_, other.length_);
+
+  length_ = strlen(s_);
+
+  delete tmp;
+
+  return *this;
+}
+
+// String& concat(const char*)
+// 
+// Concatenates the given c string with the current one and returns the
+// result. This value is also saved in the calling object's c string.
+// @return String& This string object
+String& String::concat(const char* other) {
+  char* tmp = new char[length_];
+  tmp = strncpy(tmp, s_, length_);
+  delete s_;
+
+  s_ = new char[length_ + sizeof(other) + 1];
+  s_ = strncpy(s_, tmp, length_);
+
+  strncpy(s_+sizeof(other), other, (size_t)sizeof(other));
+
+  length_ = strlen(s_);
+
+  delete tmp;
+
+  return *this;
+}
+
+// String operator +(const String&) const
+// 
+// Concatenate the two strings in place without altering either object.
+// @return String& The constructed string object
+// 
+// @const
+// @operator
+String String::operator+(const String& other) const {
+  char* result = new char[length_ + other.length_ + 1];
+  result = strncpy(result, s_, length_);
+
+  strncpy(result+other.length_, other.s_, other.length_);
+
+  return String(result);
+}
+
+// String operator +(const char*) const
+// 
+// Concatenate the two strings in place without altering either object.
+// @return String The constructed string object
+// 
+// @const
+// @operator
+String String::operator+(const char* other) const {
+  char* tmp = new char[length_ + strlen(other)+1];
+  tmp = strncpy(tmp, s_, length_);
+  
+  strncpy(tmp+length_, other, strlen(other));
+
+  return String(tmp);
 }
 
 } // namespace rant

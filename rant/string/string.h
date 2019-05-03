@@ -9,7 +9,13 @@ public:
   String(const char* s);
   ~String();
 
-  char* c_str() const;
+  const char* c_str() const;
+  operator char*() const;
+
+  String& concat(const String& other);
+  String& concat(const char* other);
+  String operator +(const String& other) const;
+  String operator +(const char* other) const;
 private:
   char* s_;
   int length_;
