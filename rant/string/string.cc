@@ -61,18 +61,14 @@ String::operator char*() const {
 // the result. This value is also saved in the calling object's c string.
 // @return String& This string object
 String& String::concat(const String& other) {
-  char* tmp = new char[length_];
-  tmp = strncpy(tmp, s_, length_);
-  delete s_;
+  char* result = new char[length_ + other.length_ + 1];
+  result = strncpy(result, s_, length_);
 
+  strncpy(result+length_, other.s_, other.length_);
   s_ = new char[length_ + other.length_ + 1];
-  s_ = strncpy(s_, tmp, length_);
-
-  strncpy(s_+other.length_, other.s_, other.length_);
+  s_ = strncpy(s_, result, strlen(result));
 
   length_ = strlen(s_);
-
-  delete tmp;
 
   return *this;
 }
@@ -83,18 +79,14 @@ String& String::concat(const String& other) {
 // result. This value is also saved in the calling object's c string.
 // @return String& This string object
 String& String::concat(const char* other) {
-  char* tmp = new char[length_];
-  tmp = strncpy(tmp, s_, length_);
-  delete s_;
+  char* result = new char[length_ + strlen(other) + 1];
+  result = strncpy(result, s_, length_);
 
-  s_ = new char[length_ + sizeof(other) + 1];
-  s_ = strncpy(s_, tmp, length_);
-
-  strncpy(s_+sizeof(other), other, (size_t)sizeof(other));
+  strncpy(result+length_, other, strlen(other));
+  s_ = new char[length_ + other.length_ + 1];
+  s_ = strncpy(s_, result, strlen(result));
 
   length_ = strlen(s_);
-
-  delete tmp;
 
   return *this;
 }
@@ -107,12 +99,12 @@ String& String::concat(const char* other) {
 // @const
 // @operator
 String String::operator+(const String& other) const {
-  char* result = new char[length_ + other.length_ + 1];
-  result = strncpy(result, s_, length_);
+  char* tmp = new char[length_ + other.length_ + 1];
+  tmp = strncpy(tmp, s_, length_);
+  
+  strncpy(tmp+length_, other.s_, other.length_);
 
-  strncpy(result+other.length_, other.s_, other.length_);
-
-  return String(result);
+  return String(tmp);
 }
 
 // String operator +(const char*) const
